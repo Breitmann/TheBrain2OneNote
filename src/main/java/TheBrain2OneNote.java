@@ -31,12 +31,30 @@ public class TheBrain2OneNote {
 		
 		System.out.println(ACCESS_TOKEN);
 		listNotebooks();
-		createNotebook("Test4");
-		listNotebooks();
+		
+		//createNotebook("Test4");
+		
+		createSection("0-F13DBFDBA2CC865A!8007", "Section1");
 		
 		System.out.println("Finished");
 	}
+
 	
+	private static void createSection(String notebookId, String sectionName )
+			throws Exception
+	{
+        GenericUrl url = new GenericUrl("https://www.onenote.com/api/v1.0/me/notes/notebooks/" + notebookId + "/sections" );
+        System.out.println(url);
+        String requestBody = "{'name': '" + sectionName + "'}";
+		HttpRequest request = HTTP_TRANSPORT.createRequestFactory().buildPostRequest(url, ByteArrayContent.fromString("application/json", requestBody));
+        request.getHeaders().setContentType("application/json");
+		request.getHeaders().setAuthorization("Bearer " + ACCESS_TOKEN);
+        HttpResponse response = request.execute();
+		
+        System.out.println(response.getStatusCode());
+        
+        System.out.println(response.parseAsString() );	
+	}
 	
 	private static void createNotebook(String name)
 		throws Exception
