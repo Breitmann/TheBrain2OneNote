@@ -2,9 +2,12 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -28,8 +31,26 @@ public class TheBrain2OneNote {
 		
 		System.out.println(ACCESS_TOKEN);
 		listNotebooks();
+		createNotebook("Test4");
+		listNotebooks();
 		
 		System.out.println("Finished");
+	}
+	
+	
+	private static void createNotebook(String name)
+		throws Exception
+	{
+        GenericUrl url = new GenericUrl("https://www.onenote.com/api/v1.0/me/notes/notebooks");
+        String requestBody = "{'name': '" + name + "'}";
+		HttpRequest request = HTTP_TRANSPORT.createRequestFactory().buildPostRequest(url, ByteArrayContent.fromString("application/json", requestBody));
+        request.getHeaders().setContentType("application/json");
+		request.getHeaders().setAuthorization("Bearer " + ACCESS_TOKEN);
+        HttpResponse response = request.execute();
+		
+        System.out.println(response.getStatusCode());
+        
+        System.out.println(response.parseAsString() );	
 	}
 	
 	private static void listNotebooks()
