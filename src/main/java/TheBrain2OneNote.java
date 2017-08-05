@@ -34,11 +34,31 @@ public class TheBrain2OneNote {
 		
 		//createNotebook("Test4");
 		
-		createSection("0-F13DBFDBA2CC865A!8007", "Section1");
+		//createSection("0-F13DBFDBA2CC865A!8007", "Section1");
+		
+		createPage("0-F13DBFDBA2CC865A!8011", "Title1");
 		
 		System.out.println("Finished");
 	}
 
+
+	private static void createPage(String sectionId, String pageTitle )
+			throws Exception
+	{
+        GenericUrl url = new GenericUrl("https://www.onenote.com/api/v1.0/me/notes/sections/" + sectionId + "/pages" );
+        System.out.println(url);
+        String requestBody = "<html><head><title>"+ pageTitle +"</title></head><body>Test</body></html>";
+		HttpRequest request = HTTP_TRANSPORT.createRequestFactory().buildPostRequest(url, ByteArrayContent.fromString("text/html", requestBody));
+        request.getHeaders().setContentType("text/html");
+		request.getHeaders().setAuthorization("Bearer " + ACCESS_TOKEN);
+        HttpResponse response = request.execute();
+		
+        System.out.println(response.getStatusCode());
+        
+        System.out.println(response.parseAsString() );	
+	}
+	
+	
 	
 	private static void createSection(String notebookId, String sectionName )
 			throws Exception
